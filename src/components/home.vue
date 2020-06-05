@@ -3,7 +3,7 @@
             <el-header>
                 <div>
                     <img src="../assets/logo.png" alt="">
-                    <span>自动化测试平台</span>
+                    <span>自动化测试</span>
                 </div>
                 <div style="margin-right: -60%">
                     <el-dropdown @command="handleCommand">
@@ -53,7 +53,7 @@
                                     <span @click="openFullScreen">{{ subItem.auth}}</span>
                                 </el-menu-item>
                         </el-submenu>
-                        <el-menu-item index="sysConfig">
+                        <el-menu-item index="sysConfig" >
                             <i class="iconfont icon-shezhi_huaban1"></i>
                             <span slot="title">系统配置</span>
                         </el-menu-item>

@@ -182,7 +182,7 @@
                 //获取项目列表参数
                 queryInfo: {
                     userName: window.sessionStorage.getItem('user'),
-                    query: '',
+                    query: null,
                     pageNum: 1,
                     pageSize: 5,
                 },

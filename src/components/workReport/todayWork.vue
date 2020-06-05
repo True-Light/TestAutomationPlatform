@@ -256,7 +256,7 @@
                 //获取日报列表参数
                 queryInfo: {
                     userName: window.sessionStorage.getItem('user'),
-                    query: '',
+                    query: null,
                     pageNum: 1,
                     pageSize: 5,
                 },
@@ -272,14 +272,14 @@
                 //新增项目表单
                 addProjectForm: {
                     userName: window.sessionStorage.getItem('user'),
-                    projectName: '',
-                    testType: '',
-                    testState: '',
-                    testMaster: '',
-                    tester: '',
-                    devMaster: '',
-                    submissionDate: '',
-                    onlineDate: ''
+                    projectName: null,
+                    testType: null,
+                    testState: null,
+                    testMaster: null,
+                    tester: null,
+                    devMaster: null,
+                    submissionDate: null,
+                    onlineDate: null
                 },
                 //新增项目的验证规则
                 addProjectFormRules: {
@@ -312,11 +312,11 @@
                 //新增日报表单
                 addReportForm: {
                     userName: window.sessionStorage.getItem('user'),
-                    projectName: '',
-                    testState: '',
-                    todayWork: '',
-                    todayProblem: '',
-                    urgentProblem: '',
+                    projectName: null,
+                    testState: null,
+                    todayWork: null,
+                    todayProblem: null,
+                    urgentProblem: null,
                 },
                 //新增日报的验证规则
                 addReportFormRules: {

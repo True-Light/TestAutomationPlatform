@@ -15,6 +15,7 @@ import setTask from "../components/celeryTask/setTask";
 import taskResult from "../components/celeryTask/taskResult";
 import newPerformance from "../components/performanceTest/newPerformance";
 import searchPerformanceCase from "../components/performanceTest/searchPerformanceCase";
+import sysConfig from "../components/sysConfig";
 
 Vue.use(VueRouter)
 
@@ -37,7 +38,9 @@ Vue.use(VueRouter)
         {path: '/setTask', component: setTask},
         {path: '/checkResult', component: taskResult},
         {path: '/newPerformance', component: newPerformance},
-        {path: '/checkPerformance', component: searchPerformanceCase}
+        {path: '/checkPerformance', component: searchPerformanceCase},
+
+        {path: '/checkPerformance', component: sysConfig}
 
       ]}
 ]

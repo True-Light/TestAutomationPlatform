@@ -89,7 +89,7 @@
                     ],
                     name:[
                         { required: true, message: '请输入名字', trigger: 'blur' },
-                        { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
+                        { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
                     ]
 
                 }
@@ -107,7 +107,7 @@
                         'username': this.loginFrom.username,
                         'password': '123456' + this.loginFrom.password + '.com'
                     }
-                    const {data: res} = await this.$http.post('api/token/', submitLoginFrom);
+                    const {data: res} = await this.$http.post('token/', submitLoginFrom);
                     //console.log(res)
                     if (res.status !== 200 ) return this.$message.error(res.msg)
                     this.$message.success('登陆成功')
@@ -128,10 +128,10 @@
                     const subForm = {
                         'username': this.registeredForm.username,
                         'password': '123456' + this.registeredForm.password + '.com',
-                        'name': this.resetLoginForm.name
+                        'name': this.registeredForm.name
                     }
                     //发起添加请求
-                    const {data: res} = await this.$http.post('api/registered/', subForm)
+                    const {data: res} = await this.$http.post('registered/', subForm)
                     //console.log(res)
                     if (res.meta.status !== 201) return this.$message.error(res.meta.msg)
                     this.$message.success(res.meta.msg)
