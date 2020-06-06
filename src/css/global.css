@@ -18,6 +18,6 @@ body,
 
 .el-table {
     line-height: normal;
-    margin-top: 0px;
+    margin-top: 1px;
     font-size: 12px;
 }

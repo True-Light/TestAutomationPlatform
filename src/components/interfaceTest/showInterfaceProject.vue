@@ -6,8 +6,8 @@
             <el-breadcrumb-item>接口测试</el-breadcrumb-item>
             <el-breadcrumb-item>接口项目</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-card style="height: 60px">
-            <el-row :gutter="20" style="margin-top: -70px">
+        <el-card>
+            <el-row :gutter="20">
                 <el-col :span="6">
                     <el-input placeholder="请输入项目关键字" v-model="queryInfo.query" clearable @clear="getProject">
                         <el-button slot="append" icon="el-icon-search" @click="getProject"></el-button>
@@ -15,15 +15,8 @@
                 </el-col>
 
                 <el-col :span="6">
-                    <el-popover
-                            ref="popover4"
-                            placement="right"
-                            width="260"
-                            trigger="click">
-                        <el-button type="primary" @click="addProjectVisible=true" round>新增项目</el-button>
-                        <el-button type="success" round disabled>新增用例</el-button>
-                    </el-popover>
-                    <el-button v-popover:popover4 type="danger" round style="margin-left: -30px">选择操作</el-button>
+                    <el-button type="primary" @click="addProjectVisible=true" round>新增项目</el-button>
+                    <el-button type="success" round disabled>新增用例</el-button>
                 </el-col>
             </el-row>
         </el-card>
@@ -32,9 +25,10 @@
 
             <el-table :data="ProjectList" border stripe v-loading="loading">
                 <el-table-column label="ID" type="index"></el-table-column>
-                <el-table-column label="项目名称" prop="name"></el-table-column>
-                <el-table-column label="负责人" prop="tester"></el-table-column>
+                <el-table-column label="项目名称" prop="name" width="200"></el-table-column>
+                <el-table-column label="负责人" prop="tester" width="90"></el-table-column>
                 <el-table-column label="环境模式" prop="virtualenv"
+                                 width="100"
                                  :filters="[{ text: '测试环境', value: '测试环境' },
                                  { text: '线上环境', value: '线上环境' },
                                   {text: '备用环境', value: '备用环境' },]"
@@ -48,8 +42,9 @@
                         </el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="公共host" prop="host"></el-table-column>
-                <el-table-column label="操作" width="180">
+                <el-table-column label="公共HOST" prop="host" width="250"></el-table-column>
+                <el-table-column label="公共请求头" prop="com_header"></el-table-column>
+                <el-table-column label="操作" width="200">
                     <template slot-scope="scope">
                         <el-tooltip content="查看详情" placement="top" :enterable="false" effect="light">
                             <el-button type="primary"
@@ -92,10 +87,12 @@
                     :total="total">
             </el-pagination>
             <!-- 对话框-新增项目 -->
-            <el-dialog title="新增接口测试项目" :visible.sync="addProjectVisible" @close="addDialogClosed" width="550px">
+            <el-dialog title="新增接口测试项目" :visible.sync="addProjectVisible" @close="addDialogClosed"
+                       style="text-align: center"
+                       width="550px">
                 <el-form :model="addProjectForm" :rules="addProjectFormRules" ref="addProjectRef"
-                         label-width="140px" label-position="left"
-                         style="margin-top: -70px; width: 500px">
+                         label-width="140px"
+                         style="width: 500px">
 
                     <el-form-item label="项目名称" prop="name">
                         <el-input v-model="addProjectForm.name" style="width: 225px"></el-input>
@@ -129,15 +126,18 @@
                         <el-input v-model="addProjectForm.com_header" style="width: 225px"></el-input>
                     </el-form-item>
                 </el-form>
-                <div slot="footer" class="dialog-footer" style="margin-top: -70px">
+                <div slot="footer" class="dialog-footer" style="margin-top: -40px">
                     <el-button @click="addProjectVisible = false">取 消</el-button>
                     <el-button type="primary" @click="addProjectCheck">确 定</el-button>
                 </div>
             </el-dialog>
             <!-- 对话框-修改项目 -->
-            <el-dialog title="修改项目" :visible.sync="editProjectVisible" @close="editProjectVisibleClosed">
-                <el-form :model="getEditForm" :rules="editProjectRules" ref="editProjectRef" label-width="140px"
-                         style="margin-top: -70px">
+            <el-dialog title="修改项目" :visible.sync="editProjectVisible" @close="editProjectVisibleClosed"
+                       style="text-align: center"
+                       width="600px">
+                <el-form :model="getEditForm" :rules="editProjectRules" ref="editProjectRef" label-width="150px"
+                         style="width: 550px"
+                         >
 
                     <el-form-item label="项目名称" prop="name">
                         <el-input v-model="getEditForm.name" style="width: 225px"></el-input>
@@ -168,10 +168,12 @@
                     </el-form-item>
 
                     <el-form-item label="公共参数" prop="com_header">
-                        <el-input v-model="getEditForm.com_header" style="width: 225px"></el-input>
+                        <el-input v-model="getEditForm.com_header" type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  style="width: 225px"></el-input>
                     </el-form-item>
                 </el-form>
-                <div slot="footer" class="dialog-footer" style="margin-top: -70px">
+                <div slot="footer" class="dialog-footer" style="margin-top: -40px">
                     <el-button @click="editProjectVisible = false">取 消</el-button>
                     <el-button type="primary" @click="updateProject">确 定</el-button>
                 </div>
@@ -183,12 +185,12 @@
 
 <script>
     export default {
-        name: "showInterface",
+        name: "interfaceProject",
         data() {
             return {
                 //获取项目列表参数
                 queryInfo: {
-                    query: '',
+                    query: null,
                     page_num: 1,
                     page_size: 10,
                 },
@@ -213,11 +215,11 @@
                 //新增接口项目表单
                 addProjectForm: {
                     operator: window.sessionStorage.getItem('user'),
-                    name: '',
-                    tester: '',
-                    virtualenv: '',
-                    host: '',
-                    com_header: ''
+                    name: null,
+                    tester: null,
+                    virtualenv: null,
+                    host: null,
+                    com_header: null
                 },
                 //新增接口项目的验证规则
                 addProjectFormRules: {

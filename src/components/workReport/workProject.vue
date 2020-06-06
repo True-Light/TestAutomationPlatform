@@ -6,8 +6,8 @@
             <el-breadcrumb-item>工作日报</el-breadcrumb-item>
             <el-breadcrumb-item>历史报告</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-card style="height: 60px">
-            <el-row :gutter="20" style="margin-top: -70px">
+        <el-card>
+            <el-row :gutter="20">
                 <el-col :span="6">
                     <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getProject">
                         <el-button slot="append" icon="el-icon-search" @click="getProject"></el-button>
@@ -24,9 +24,10 @@
 
             <el-table :data="workProjectList" border stripe v-loading="loading">
                 <el-table-column label="ID" type="index"></el-table-column>
-                <el-table-column label="项目名称" prop="project_name"></el-table-column>
-                <el-table-column label="测试类型" prop="test_type"></el-table-column>
+                <el-table-column label="项目名称" prop="project_name" width="200px"></el-table-column>
+                <el-table-column label="测试类型" prop="test_type" width="90px"></el-table-column>
                 <el-table-column label="测试状态" prop="test_state"
+                                 width="100"
                                  :filters="[{ text: '测试中', value: '测试中' },
                                  { text: '测试完成', value: '测试完成' },
                                   {text: '测试停滞', value: '测试停滞' },
@@ -42,12 +43,12 @@
                         </el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="测试负责人" prop="test_master"></el-table-column>
-                <el-table-column label="测试参与人" prop="tester"></el-table-column>
-                <el-table-column label="开发负责人" prop="development_manager"></el-table-column>
-                <el-table-column label="提交时间" prop="submission_time"></el-table-column>
-                <el-table-column label="预计上线时间" prop="online_time"></el-table-column>
-                <el-table-column label="操作" width="180">
+                <el-table-column label="测试负责人" prop="test_master" width="90px"></el-table-column>
+                <el-table-column label="测试参与人" prop="tester" width="90px"></el-table-column>
+                <el-table-column label="开发负责人" prop="development_manager" width="90px"></el-table-column>
+                <el-table-column label="提交时间" prop="submission_time" width="90px"></el-table-column>
+                <el-table-column label="预计上线时间" prop="online_time" width="100px"></el-table-column>
+                <el-table-column label="操作" width="200">
                     <template slot-scope="scope">
                         <el-tooltip content="查看日报" placement="top" :enterable="false" effect="light">
                             <el-button type="primary"
@@ -90,15 +91,15 @@
                     :total="total">
             </el-pagination>
             <!-- 对话框-查看本项目下所有日报 -->
-            <el-dialog title="详细日报" :visible.sync="showAllReportVisible" width="80%"
+            <el-dialog title="详细日报" :visible.sync="showAllReportVisible" width="60%"
                        @close="showAllReportVisibleClosed"
-            style="margin-top: -70px">
-                <el-card style="margin-top: -70px">
+            style="text-align: center">
+                <el-card>
                 <el-table :data="workReportList" border stripe>
                     <el-table-column label="ID" type="index"></el-table-column>
-                    <el-table-column label="项目名称" prop="project_name"></el-table-column>
-                    <el-table-column label="测试负责人" prop="test_master"></el-table-column>
-                    <el-table-column label="测试参与人" prop="tester"></el-table-column>
+                    <el-table-column label="项目名称" prop="project_name" width="160px"></el-table-column>
+                    <el-table-column label="测试负责人" prop="test_master" width="90px"></el-table-column>
+                    <el-table-column label="测试参与人" prop="tester" width="90px"></el-table-column>
                     <el-table-column label="工作内容" prop="today_work"></el-table-column>
                     <el-table-column label="提交问题" prop="today_problem"></el-table-column>
                     <el-table-column label="阻塞问题" prop="urgent_problem"></el-table-column>
@@ -107,9 +108,10 @@
             </el-dialog>
 
             <!-- 对话框-修改项目 -->
-            <el-dialog title="修改项目" :visible.sync="editProjectVisible" @close="editProjectVisibleClosed" width="550px">
+            <el-dialog title="修改项目" :visible.sync="editProjectVisible" @close="editProjectVisibleClosed" width="550px"
+            style="text-align: center">
                 <el-form :model="getEditForm" :rules="editProjectRules" ref="editProjectRef" label-width="140px"
-                style="margin-top: -70px; width: 500px">
+                style="width: 500px">
 
                     <el-form-item label="项目名称" prop="project_name">
                         <el-input v-model="getEditForm.project_name" style="width: 225px"></el-input>
@@ -164,7 +166,7 @@
                     </el-form-item>
 
                 </el-form>
-                <div slot="footer" class="dialog-footer" style="margin-top: -70px">
+                <div slot="footer" class="dialog-footer" style="margin-top: -40px">
                     <el-button @click="editProjectVisible = false">取 消</el-button>
                     <el-button type="primary" @click="updateProject">确 定</el-button>
                 </div>

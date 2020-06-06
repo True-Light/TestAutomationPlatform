@@ -18,8 +18,8 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
-                <el-button type="info" size="mini">
-                标准位
+                <el-button type="info" size="mini" disabled>
+                占位
                 </el-button>
             </el-header>
             <el-container>
@@ -120,7 +120,7 @@
                 });
                 setTimeout(() => {
                     loading.close();
-                }, 800);
+                }, 500);
             }
         }
 
@@ -151,6 +151,7 @@
     .el-aside {
         background-color: #022053;
         color: #333;
+        display: block;
         text-align: left;
         line-height: 200px;
         .el-menu {
@@ -160,23 +161,27 @@
 
     .el-main {
         background-color: #eceef1;
-        color: #333;
-        text-align: center;
-        line-height: 160px;
+        /*color: #333;*/
+        /*position: absolute;*/
+        /*left: 200px;*/
+        /*right: 0;*/
+        /*top: 60px;*/
+        /*bottom: 0;*/
+        /*overflow-y: scroll;*/
     }
 
-    body > .el-container {
-        margin-bottom: 40px;
-    }
+    /*body > .el-container {*/
+    /*    margin-bottom: 40px;*/
+    /*}*/
 
-    .el-container:nth-child(5) .el-aside,
-    .el-container:nth-child(6) .el-aside {
-        line-height: 260px;
-    }
+    /*.el-container:nth-child(5) .el-aside,*/
+    /*.el-container:nth-child(6) .el-aside {*/
+    /*    line-height: 260px;*/
+    /*}*/
 
-    .el-container:nth-child(7) .el-aside {
-        line-height: 320px;
-    }
+    /*.el-container:nth-child(7) .el-aside {*/
+    /*    line-height: 320px;*/
+    /*}*/
     .iconfont {
         margin-right: 15px;
         //display: inline-block;

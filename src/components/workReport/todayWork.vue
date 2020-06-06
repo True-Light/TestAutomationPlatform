@@ -6,15 +6,14 @@
             <el-breadcrumb-item>工作日报</el-breadcrumb-item>
             <el-breadcrumb-item>本日报告</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-card style="height: 60px">
-            <el-row :gutter="20" style="margin-top: -70px">
+        <el-card>
+            <el-row :gutter="20">
                 <el-col :span="6">
                     <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getWorkReport">
                         <el-button slot="append" icon="el-icon-search" @click="getWorkReport"></el-button>
                     </el-input>
                 </el-col>
-
-                <el-col :span="6">
+                <el-col :span="6" style="margin-left: 30px">
                     <el-popover
                             ref="popover4"
                             placement="right"
@@ -32,9 +31,10 @@
 
             <el-table :data="workReportList" border stripe v-loading="loading">
                 <el-table-column label="ID" type="index"></el-table-column>
-                <el-table-column label="项目名称" prop="project_name"></el-table-column>
-                <el-table-column label="测试类型" prop="test_type"></el-table-column>
+                <el-table-column label="项目名称" prop="project_name" width="180px"></el-table-column>
+                <el-table-column label="测试类型" prop="test_type" width="80px"></el-table-column>
                 <el-table-column label="测试状态" prop="test_state"
+                                 width="100px"
                                  :filters="[{ text: '测试中', value: '测试中' },
                                  { text: '测试完成', value: '测试完成' },
                                   {text: '测试停滞', value: '测试停滞' },
@@ -50,10 +50,10 @@
                         </el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="测试负责人" prop="test_master"></el-table-column>
-                <el-table-column label="开发负责人" prop="development_manager"></el-table-column>
-                <el-table-column label="提交时间" prop="submission_time"></el-table-column>
-                <el-table-column label="预计上线时间" prop="online_time"></el-table-column>
+                <el-table-column label="测试负责人" prop="test_master" width="90px"></el-table-column>
+                <el-table-column label="开发负责人" prop="development_manager" width="90px"></el-table-column>
+                <el-table-column label="提交时间" prop="submission_time" width="90px"></el-table-column>
+                <el-table-column label="预计上线时间" prop="online_time" width="100px"></el-table-column>
                 <el-table-column label="今日工作内容" prop="today_work"></el-table-column>
                 <el-table-column label="今日提交问题" prop="today_problem"></el-table-column>
                 <el-table-column label="影响进度的问题" prop="urgent_problem"></el-table-column>
@@ -91,10 +91,11 @@
                     :total="total">
             </el-pagination>
             <!-- 对话框-新增项目 -->
-            <el-dialog title="新增项目" :visible.sync="addProject" @close="addDialogClosed" width="550px">
+            <el-dialog title="新增项目" :visible.sync="addProject" @close="addDialogClosed" width="550px"
+                       style="text-align: center">
                 <el-form :model="addProjectForm" :rules="addProjectFormRules" ref="addWorkProjectRef"
-                         label-width="140px" label-position="left"
-                         style="margin-top: -70px; width: 500px">
+                         label-width="140px"
+                         style="width: 500px">
 
                     <el-form-item label="项目名称" prop="projectName">
                         <el-input v-model="addProjectForm.projectName" style="width: 225px"></el-input>
@@ -149,15 +150,15 @@
                     </el-form-item>
 
                 </el-form>
-                <div slot="footer" class="dialog-footer" style="margin-top: -70px">
+                <div slot="footer" class="dialog-footer" style="margin-top: -40px">
                     <el-button @click="addProject = false">取 消</el-button>
                     <el-button type="primary" @click="addProjectCheck">确 定</el-button>
                 </div>
             </el-dialog>
             <!-- 对话框-新增日报 -->
-            <el-dialog title="新增日报" :visible.sync="addReport" @close="addDialogClosed2" width="550px">
+            <el-dialog title="新增日报" :visible.sync="addReport" @close="addDialogClosed2" width="550px" style="text-align: center">
                 <el-form :model="addReportForm" :rules="addReportFormRules" ref="addReportRef" label-width="140px"
-                         style="margin-top: -70px; width: 500px">
+                         style="width: 500px">
 
                     <el-form-item label="测试项目" prop="projectName">
                         <el-select v-model="addReportForm.projectName"
@@ -181,28 +182,34 @@
                     </el-form-item>
 
                     <el-form-item label="工作内容" prop="todayWork">
-                        <el-input type="textarea" v-model="addReportForm.todayWork"></el-input>
+                        <el-input type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  v-model="addReportForm.todayWork"></el-input>
                     </el-form-item>
 
                     <el-form-item label="提交问题" prop="todayProblem">
-                        <el-input type="textarea" v-model="addReportForm.todayProblem"></el-input>
+                        <el-input type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  v-model="addReportForm.todayProblem"></el-input>
                     </el-form-item>
 
                     <el-form-item label="阻塞进度的问题" prop="urgentProblem">
-                        <el-input type="textarea" v-model="addReportForm.urgentProblem"></el-input>
+                        <el-input type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  v-model="addReportForm.urgentProblem"></el-input>
                     </el-form-item>
 
                 </el-form>
-                <div slot="footer" class="dialog-footer" style="margin-top: -70px">
+                <div slot="footer" class="dialog-footer" style="margin-top: -40px">
                     <el-button @click="addReport = false">取 消</el-button>
                     <el-button type="primary" @click="addReportCheck">确 定</el-button>
                 </div>
             </el-dialog>
 
             <!-- 对话框-修改日报 -->
-            <el-dialog title="修改日报" :visible.sync="editReportVisible" @close="addDialogClosed3" width="550px">
+            <el-dialog title="修改日报" :visible.sync="editReportVisible" @close="addDialogClosed3" width="550px" style="text-align: center">
                 <el-form :model="getEditForm" :rules="editReportRules" ref="editReportRef" label-width="140px"
-                         style="margin-top: -70px; width: 500px">
+                         style="width: 500px">
 
                     <el-form-item label="测试项目" prop="project_name">
                         <el-select v-model="getEditForm.project_name"
@@ -226,19 +233,25 @@
                     </el-form-item>
 
                     <el-form-item label="工作内容" prop="today_work">
-                        <el-input type="textarea" v-model="getEditForm.today_work"></el-input>
+                        <el-input type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  v-model="getEditForm.today_work"></el-input>
                     </el-form-item>
 
                     <el-form-item label="提交问题">
-                        <el-input type="textarea" v-model="getEditForm.today_problem"></el-input>
+                        <el-input type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  v-model="getEditForm.today_problem"></el-input>
                     </el-form-item>
 
                     <el-form-item label="阻塞进度的问题">
-                        <el-input type="textarea" v-model="getEditForm.urgent_problem"></el-input>
+                        <el-input type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                                  v-model="getEditForm.urgent_problem"></el-input>
                     </el-form-item>
 
                 </el-form>
-                <div slot="footer" class="dialog-footer" style="margin-top: -70px">
+                <div slot="footer" class="dialog-footer" style="margin-top: -40px">
                     <el-button @click="editReportVisible = false">取 消</el-button>
                     <el-button type="primary" @click="editWorkReport">确 定</el-button>
                 </div>

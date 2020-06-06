@@ -6,8 +6,8 @@ import ro from "element-ui/src/locale/lang/ro";
 import welcome from "../components/welcome";
 import todayWork from "../components/workReport/todayWork";
 import workProject from "../components/workReport/workProject";
-import showInterface from "../components/interfaceTest/showInterface";
-import searchInterfaceCase from "../components/interfaceTest/searchInterfaceCase";
+import showInterfaceProject from "../components/interfaceTest/showInterfaceProject";
+import InterfaceCase from "../components/interfaceTest/InterfaceCase";
 import searchWebCase from "../components/webTest/searchWebCase";
 import webCase from "../components/webTest/webCase";
 import runningTask from "../components/celeryTask/runningTask";
@@ -29,9 +29,9 @@ Vue.use(VueRouter)
         {path: '/welcome', component: welcome},
         {path: '/todayWork', component: todayWork},
         {path: '/historyWork', component: workProject},
-        {path: '/checkInterface', component: showInterface},
+        {path: '/interfaceProject', component: showInterfaceProject},
+        {path: '/interfaceCase', component: InterfaceCase},
 
-        {path: '/newInterface', component: searchInterfaceCase},
         {path: '/newWebCase', component: searchWebCase},
         {path: '/checkWebCase', component: webCase},
         {path: '/checkTask', component: runningTask},
@@ -40,7 +40,7 @@ Vue.use(VueRouter)
         {path: '/newPerformance', component: newPerformance},
         {path: '/checkPerformance', component: searchPerformanceCase},
 
-        {path: '/checkPerformance', component: sysConfig}
+        {path: '/sysConfig', component: sysConfig}
 
       ]}
 ]

@@ -1,18 +1,25 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import './plugins/element.js'
+// import './plugins/element.js'
+import ElementUI, {Message, MessageBox} from 'element-ui'
 //global css
 import './css/global.css'
-import './css/index.scss'
+import 'element-ui/lib/theme-chalk/index.css'
+// import './css/index.scss'
 // fonts
 import './assets/fonts/iconfont.css'
 
 import axios from 'axios'
 
+
+Vue.use(ElementUI)
+Vue.prototype.$message = Message
+Vue.prototype.$confirm = MessageBox.confirm
+
 //base url
-// axios.defaults.baseURL = 'http://192.168.3.2/api/'
-axios.defaults.baseURL = 'http://10.71.82.65/api/'
+axios.defaults.baseURL = 'http://192.168.3.2/api/'
+// axios.defaults.baseURL = 'http://10.71.82.65/api/'
 
 
 // axios.defaults.proxy = {
