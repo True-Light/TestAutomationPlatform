@@ -18,8 +18,9 @@ Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
 
 //base url
-axios.defaults.baseURL = 'http://192.168.3.2/api/'
+// axios.defaults.baseURL = 'http://192.168.3.2/api/'
 // axios.defaults.baseURL = 'http://10.71.82.65/api/'
+axios.defaults.baseURL = 'http://127.0.0.1:8888/api/'
 
 
 // axios.defaults.proxy = {

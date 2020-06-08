@@ -122,7 +122,7 @@
                         <el-input v-model="addProjectForm.host" style="width: 225px"></el-input>
                     </el-form-item>
 
-                    <el-form-item label="公共参数" prop="com_header">
+                    <el-form-item label="公共请求头" prop="com_header">
                         <el-input v-model="addProjectForm.com_header" style="width: 225px"></el-input>
                     </el-form-item>
                 </el-form>

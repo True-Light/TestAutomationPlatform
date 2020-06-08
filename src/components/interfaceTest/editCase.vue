@@ -334,16 +334,12 @@
                     if (!valid) {
                         return this.$message.error('缺少必填项!')
                     }
-                    this.loading = true
+                    // this.loading = true
                     const {data: res} = await this.$http.post('interface/create_case/', this.createCaseForm)
                     if (res.meta.status !== 200) {
                         this.loading = false
                         return this.$message.error(res.meta.msg)
                     }
-                    this.getCreatePage()
-                    // location.reload()
-                    // this.$router.go(0)
-                    // window.reload()
                     this.loading = false
                     return this.$message.success(res.meta.msg)
 

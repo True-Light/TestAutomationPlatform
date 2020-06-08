@@ -8,6 +8,7 @@ import todayWork from "../components/workReport/todayWork";
 import workProject from "../components/workReport/workProject";
 import showInterfaceProject from "../components/interfaceTest/showInterfaceProject";
 import InterfaceCase from "../components/interfaceTest/InterfaceCase";
+import editCase from "../components/interfaceTest/editCase"
 import searchWebCase from "../components/webTest/searchWebCase";
 import webCase from "../components/webTest/webCase";
 import runningTask from "../components/celeryTask/runningTask";
@@ -31,7 +32,7 @@ Vue.use(VueRouter)
         {path: '/historyWork', component: workProject},
         {path: '/interfaceProject', component: showInterfaceProject},
         {path: '/interfaceCase', component: InterfaceCase},
-
+        {path: '/editInterfaceCase', component: editCase},
         {path: '/newWebCase', component: searchWebCase},
         {path: '/checkWebCase', component: webCase},
         {path: '/checkTask', component: runningTask},

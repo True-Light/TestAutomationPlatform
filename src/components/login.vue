@@ -28,13 +28,18 @@
         <el-dialog title="注册用户" :visible.sync="registeredVisible" @close="registeredVisibleClosed" width="400px">
             <el-form :model="registeredForm" :rules="registeredRules" ref="registeredRef">
 
-                <el-form-item label="用户名" prop="username">
+                <el-form-item label="输入用户名" prop="username">
                     <el-input v-model="registeredForm.username"></el-input>
                 </el-form-item>
 
-                <el-form-item label="密码" prop="password">
+                <el-form-item label="输入密码" prop="password">
                     <el-input v-model="registeredForm.password" type="password"></el-input>
                 </el-form-item>
+
+                <el-form-item label="再次输入密码" prop="password2">
+                    <el-input v-model="registeredForm.password2" type="password"></el-input>
+                </el-form-item>
+
 
                 <el-form-item label="你的名字" prop="name">
                     <el-input v-model="registeredForm.name"></el-input>
@@ -75,6 +80,7 @@
                 registeredForm: {
                     username: '',
                     password: '',
+                    password2: '',
                     name: ''
                 },
                 // 注册验证
@@ -87,6 +93,11 @@
                         { required: true, message: '请输入密码', trigger: 'blur' },
                         { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
                     ],
+                    password2:[
+                        { required: true, message: '请输入密码', trigger: 'blur' },
+                        { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+                    ],
+
                     name:[
                         { required: true, message: '请输入名字', trigger: 'blur' },
                         { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
@@ -128,6 +139,7 @@
                     const subForm = {
                         'username': this.registeredForm.username,
                         'password': '123456' + this.registeredForm.password + '.com',
+                        'password2': '123456' + this.registeredForm.password2 + '.com',
                         'name': this.registeredForm.name
                     }
                     //发起添加请求
