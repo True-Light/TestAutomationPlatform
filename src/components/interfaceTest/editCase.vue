@@ -7,248 +7,254 @@
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>接口测试</el-breadcrumb-item>
-                <el-breadcrumb-item>接口用例</el-breadcrumb-item>
+                <el-breadcrumb-item>编辑用例</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <!-- 新增用例区域 -->
-        <el-card v-loading="loading">
-            <el-form ref="createCaseRef" :model="createCaseForm" :rules="createCaseRules">
-                <el-row>
-                    <el-col :span="5">
-                        <el-form-item label="接口项目" prop="project_id">
-                            <el-select v-model="createCaseForm.project_id" placeholder="请选择项目" @change="getSelected">
-                                <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item style="margin-left: -30px">
-                            <el-input placeholder="http://0.0.0.0:80" v-model="host" :disabled="true">
-                                <template slot="prepend">HOST:</template>
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item style="margin-left: 10px">
-                            <el-input placeholder="请输入用例名称" v-model="createCaseForm.test_case.case_name" clearable>
-                                <template slot="prepend">用例名称:</template>
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item style="margin-left: 10px">
-                            <el-input placeholder="请输入用例描述" v-model="createCaseForm.test_case.case_desc" clearable>
-                                <template slot="prepend">用例描述:</template>
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <!-- 动态输入框-->
-                <el-card>
-                    <div v-for="(item, index) in createCaseForm.test_step" :key="index">
-                        <el-row>
-                            <el-col :span="1">
-                                <el-form-item v-model="item.step_num=index">
-                                    <el-tag>序号:{{index}}</el-tag>
-<!--                                    <el-input v-model="item.step_num" clearable :value="index" disabled>-->
-<!--                                        <template slot="prepend">序号:</template>-->
-<!--                                    </el-input>-->
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="6">
-                                <el-form-item style="margin-left: 10px"
-                                              :prop="'test_step.' + index + '.step_name'"
-                                              :rules="{ required: true, message: '请输入步骤名称', trigger: 'blur'}">
-                                    <el-input v-model="item.step_name" clearable>
-                                        <template slot="prepend">步骤名称:</template>
-                                    </el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="6">
-                                <el-form-item style="margin-left: 10px">
-                                    <el-input v-model="item.step_desc" clearable>
-                                        <template slot="prepend">步骤描述:</template>
-                                    </el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="3">
-                                <el-form-item label="前置函数" style="margin-left: 10px;border: 1px solid cornflowerblue">
+        <!-- 用例区域 -->
+        <div>
+            <el-tabs v-model="activeName">
+                <el-tab-pane label="按项目查看" name="first">
+                    <el-card>
+                        <el-select v-model="queryProject.query" placeholder="请选择项目" @change="getProjectSelected">
+                            <el-option v-for="item in project_list" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-card>
+                    <el-card>
+                        <!-- 表单区域 -->
+                        <el-table :data="project_case_list" border stripe v-loading="loading">
+                            <el-table-column label="ID" type="index" width="40"></el-table-column>
+                            <el-table-column label="用例名称" width="200">
+                                <template slot-scope="scope">
+                                    <el-popover trigger="hover" placement="top">
+                                        <p>{{ scope.row.case_desc }}</p>
+                                        <div slot="reference" class="name-wrapper">
+                                            <el-tag size="medium">{{ scope.row.case_name }}</el-tag>
+                                        </div>
+                                    </el-popover>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="步骤" prop="step_num" width="50"></el-table-column>
+                            <el-table-column label="步骤名称" width="200">
+                                <template slot-scope="scope">
+                                    <el-popover trigger="hover" placement="top">
+                                        <p>{{ scope.row.step_desc }}</p>
+                                        <div slot="reference" class="name-wrapper">
+                                            <el-tag size="medium">{{ scope.row.step_name }}</el-tag>
+                                        </div>
+                                    </el-popover>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="前置函数" width="50">
+                                <template slot-scope="scope">
                                 <el-switch
-                                  style="display: block; margin-left: 13px; margin-top: 8px"
-                                  v-model="item.set_up"
+                                  v-model="scope.row.set_up"
                                   active-color="#13ce66"
                                   inactive-color="#ff4949"
-                                  active-text="打开"
-                                  inactive-text="关闭"
-                                  active-value= 1
-                                  inactive-value= 0>
+                                  active-value="1"
+                                  inactive-value="0"
+                                disabled>
                                 </el-switch>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="3">
-                                <el-form-item label="后置函数" style="margin-left: 10px;border:1px solid cornflowerblue ">
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="后置函数" width="50">
+                                <template slot-scope="scope">
                                     <el-switch
-                                      style="display: block; margin-left: 13px; margin-top: 8px"
-                                      v-model="item.tear_down"
+                                      v-model="scope.row.tear_down"
                                       active-color="#13ce66"
                                       inactive-color="#ff4949"
-                                      active-text="打开"
-                                      inactive-text="关闭"
-                                      active-value= 1
-                                      inactive-value= 0>
+                                      active-value="1"
+                                      inactive-value="0"
+                                      disabled>
                                     </el-switch>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="4">
-                                <el-form-item label="请求方式" :prop="'test_step.' + index + '.method'"
-                                              :rules="{ required: true, message: '请选择请求方式', trigger: 'change'}">
-                                    <el-select v-model="item.method" placeholder="请选择" style="width: 120px">
-                                        <el-option label="GET" value="GET"></el-option>
-                                        <el-option label="POST" value="POST"></el-option>
-                                        <el-option label="PUT" value="PUT"></el-option>
-                                        <el-option label="DELETE" value="DELETE"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="6">
-                                <el-form-item style="margin-left: -40px" :prop="'test_step.' + index + '.url'"
-                                              :rules="{ required: true, message: '请输入路径', trigger: 'blur'}">
-                                    <el-input v-model="item.url" clearable>
-                                        <template slot="prepend">PATH</template>
-                                    </el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="6">
-                                <el-form-item style="margin-left: 10px">
-<!--                                              :prop="'test_step.' + index + '.variable'"-->
-<!--                                              :rules="{ required: true, message: '请输入变量,格式:$variable$ $variable$ $variable$', trigger: 'blur'}">-->
-
-                                    <el-input v-model="item.variable" clearable>
-                                        <template slot="prepend">变量</template>
-                                    </el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="3">
-                                <el-form-item label="启用断言" style="margin-left: 10px">
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="请求路径" prop="url" width="150"></el-table-column>
+                            <el-table-column label="请求方式" prop="method" width="80"></el-table-column>
+                            <el-table-column label="定义变量" prop="variable" width="150"></el-table-column>
+                            <el-table-column label="请求头" prop="headers" width="150"></el-table-column>
+                            <el-table-column label="参数(PARAM)" prop="params" width="150"></el-table-column>
+                            <el-table-column label="请求体(FORM)" prop="form_data" width="150"></el-table-column>
+                            <el-table-column label="请求体(JSON)" prop="json_data" width="150"></el-table-column>
+                            <el-table-column label="是否断言" width="50">
+                                <template slot-scope="scope">
                                     <el-switch
-                                      style="display: block; margin-left: 13px; margin-top: 8px"
-                                      v-model="item.need_assert"
+                                      v-model="scope.row.need_assert"
                                       active-color="#13ce66"
                                       inactive-color="#ff4949"
-                                      active-text="打开"
-                                      inactive-text="关闭"
-                                      active-value= 1
-                                      inactive-value= 0>
+                                      active-value="1"
+                                      inactive-value="0"
+                                      disabled>
                                     </el-switch>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="13">
-                                <el-card>
-                                    <el-tabs type="card">
-                                        <el-tab-pane label="请求头部" name="first">
-                                            <el-form-item label="请求头部">
-                                                <el-input type="textarea" v-model="item.headers"
-                                                          :autosize="{ minRows: 2, maxRows: 6}" clearable>
-                                                </el-input>
-                                            </el-form-item>
-                                        </el-tab-pane>
-                                        <el-tab-pane label="携带参数" name="second">
-                                            <el-form-item label="携带参数">
-                                                <el-input type="textarea" v-model="item.params"
-                                                          :autosize="{ minRows: 2, maxRows: 6}" clearable>
-                                                </el-input>
-                                            </el-form-item>
-                                        </el-tab-pane>
-                                        <el-tab-pane label="参数体(DATA-FORM)" name="third">
-                                            <el-form-item label="参数体(DATA-FORM)">
-                                                <el-input type="textarea" v-model="item.form_data"
-                                                          :autosize="{ minRows: 2, maxRows: 6}" clearable>
-                                                </el-input>
-                                            </el-form-item>
-                                        </el-tab-pane>
-                                        <el-tab-pane label="参数体(JSON-DATA)" name="fourth">
-                                            <el-form-item label="参数体(JSON-DATA)">
-                                                <el-input type="textarea" v-model="item.json_data"
-                                                          :autosize="{ minRows: 2, maxRows: 6}" clearable>
-                                                </el-input>
-                                            </el-form-item>
-                                        </el-tab-pane>
-                                        <el-tab-pane label="预期响应码" name="five">
-                                            <el-form-item label="预期响应码" :prop="'test_step.' + index + 'exp_statue'">
-                                                <el-input v-model="item.exp_statue" clearable>
-                                                </el-input>
-                                            </el-form-item>
-                                        </el-tab-pane>
-                                        <el-tab-pane label="预期响应内容" name="six">
-                                            <el-form-item label="预期响应内容">
-                                                <el-input type="textarea" v-model="item.exp_extract"
-                                                          :autosize="{ minRows: 2, maxRows: 6}" clearableclearable>
-                                                </el-input>
-                                            </el-form-item>
-                                        </el-tab-pane>
-                                    </el-tabs>
-                                </el-card>
-                            </el-col>
-                            <el-col :span="8">
-                                <el-card class="box-card" style="margin-left: 10px; height: 210px">
-                                    <div slot="header" class="clearfix">
-                                        <template v-model="res_c">
-                                            <el-tag
-                                              :type="res_c === false ? 'danger' : 'success'"
-                                              disable-transitions>状态码判定:{{res_c}}</el-tag>
-                                        </template>
-                                        <template v-model="res_r" style="margin-left: 10px">
-                                            <el-tag
-                                              :type="res_r === false ? 'danger' : 'success'"
-                                              disable-transitions>响应内容判定:{{res_r}}</el-tag>
-                                        </template>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="断言方式" prop="assert_method" width="100"></el-table-column>
+                            <el-table-column label="预期响应码" prop="exp_statue" width="150"></el-table-column>
+                            <el-table-column label="预期响应体" prop="exp_extract" width="150"></el-table-column>
+                            <el-table-column label="操作" width="200" fixed="right">
+                                <template slot-scope="scope">
+                                    <el-tooltip content="查看详情" placement="top" :enterable="false" effect="light">
+                                        <el-button type="primary"
+                                                   icon="el-icon-view"
+                                                   size="mini"
+                                                   round
+                                                   disabled>
 
-                                        <el-button style="float: right; padding: 3px 0" type="text"
-                                                   @click="drawer = true">
-                                            显示更多
                                         </el-button>
-                                    </div>
-                                    <div v-model="response" class="text item">
-                                        {{response}}
-                                    </div>
-                                </el-card>
-                            </el-col>
-                            <el-col :span="2">
-                                <el-button type="success"
-                                           style="margin-left: 20px; margin-top: 20px" round
-                                           @click="testCase(index)">
-                                    测试
-                                </el-button>
-                                <el-button @click="deleteItem(item, index)" type="danger" round
-                                           style="margin-left: 20px; margin-top: 20px">
-                                    删除该步骤
-                                </el-button>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <div>
-                                <el-divider content-position="left" style="color: #528ce2"> 分割线</el-divider>
-                            </div>
-                        </el-row>
-                    </div>
-                    <el-button @click="addItem" type="primary" style="margin-left: 20px">增加下一步</el-button>
-                        <el-button type="primary" @click="createTestCase">
-                            提交用例
-                        </el-button>
-                </el-card>
-            </el-form>
-        </el-card>
-        <el-drawer
-          title="我是标题"
-          :visible.sync="drawer"
-          :with-header="false">
-            <span>{{response}}</span>
-        </el-drawer>
+                                    </el-tooltip>
+                                    <el-tooltip content="编辑此行" placement="top" :enterable="false" effect="light">
+                                        <el-button type="primary"
+                                                   icon="el-icon-edit"
+                                                   size="mini"
+                                                   round
+                                                   @click="editRowP(scope.row.id)">
+                                        </el-button>
+                                    </el-tooltip>
+                                    <el-tooltip content="删除此行" placement="top" :enterable="false" effect="light">
+                                        <el-button type="primary"
+                                                   icon="el-icon-delete"
+                                                   size="mini"
+                                                   round
+                                                   @click="deleteRowP(scope.row.id)">
+                                        </el-button>
+                                    </el-tooltip>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <!-- 分页 -->
+                        <el-pagination
+                          @size-change="handleSizeChange"
+                          @current-change="handleCurrentChange"
+                          :current-page="queryProject.page_num"
+                          :page-sizes="[10, 25, 50, 100]"
+                          :page-size="queryProject.page_size"
+                          layout="total, sizes, prev, pager, next, jumper"
+                          :total="total">
+                        </el-pagination>
+                    </el-card>
+                </el-tab-pane>
+                <el-tab-pane label="按集合查看" name="second">
+                    <el-card>
+                        <el-select v-model="querySet.query" placeholder="请选择项目" @change="getSetSelected">
+                            <el-option v-for="item in set_list" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-card>
+                    <el-card>
+                        <!-- 表单区域 -->
+                        <el-table :data="set_case_list" border stripe v-loading="loading">
+                            <el-table-column label="ID" type="index" width="40"></el-table-column>
+                            <el-table-column label="用例名称" width="200">
+                                <template slot-scope="scope">
+                                    <el-popover trigger="hover" placement="top">
+                                        <p>{{ scope.row.case_desc }}</p>
+                                        <div slot="reference" class="name-wrapper">
+                                            <el-tag size="medium">{{ scope.row.case_name }}</el-tag>
+                                        </div>
+                                    </el-popover>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="步骤" prop="step_num" width="50"></el-table-column>
+                            <el-table-column label="步骤名称" width="200">
+                                <template slot-scope="scope">
+                                    <el-popover trigger="hover" placement="top">
+                                        <p>{{ scope.row.step_desc }}</p>
+                                        <div slot="reference" class="name-wrapper">
+                                            <el-tag size="medium">{{ scope.row.step_name }}</el-tag>
+                                        </div>
+                                    </el-popover>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="前置函数" width="50">
+                                <template slot-scope="scope">
+                                    <el-switch
+                                      v-model="scope.row.set_up"
+                                      active-color="#13ce66"
+                                      inactive-color="#ff4949"
+                                      active-value="1"
+                                      inactive-value="0"
+                                      disabled>
+                                    </el-switch>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="后置函数" width="50">
+                                <template slot-scope="scope">
+                                    <el-switch
+                                      v-model="scope.row.tear_down"
+                                      active-color="#13ce66"
+                                      inactive-color="#ff4949"
+                                      active-value="1"
+                                      inactive-value="0"
+                                      disabled>
+                                    </el-switch>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="请求路径" prop="url" width="150"></el-table-column>
+                            <el-table-column label="请求方式" prop="method" width="80"></el-table-column>
+                            <el-table-column label="定义变量" prop="variable" width="150"></el-table-column>
+                            <el-table-column label="请求头" prop="headers" width="150"></el-table-column>
+                            <el-table-column label="参数(PARAM)" prop="params" width="150"></el-table-column>
+                            <el-table-column label="请求体(FORM)" prop="form_data" width="150"></el-table-column>
+                            <el-table-column label="请求体(JSON)" prop="json_data" width="150"></el-table-column>
+                            <el-table-column label="是否断言" width="50">
+                                <template slot-scope="scope">
+                                    <el-switch
+                                      v-model="scope.row.need_assert"
+                                      active-color="#13ce66"
+                                      inactive-color="#ff4949"
+                                      active-value="1"
+                                      inactive-value="0"
+                                      disabled>
+                                    </el-switch>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="断言方式" prop="assert_method" width="100"></el-table-column>
+                            <el-table-column label="预期响应码" prop="exp_statue" width="150"></el-table-column>
+                            <el-table-column label="预期响应体" prop="exp_extract" width="150"></el-table-column>
+                            <el-table-column label="操作" width="200" fixed="right">
+                                <template slot-scope="scope">
+                                    <el-tooltip content="查看详情" placement="top" :enterable="false" effect="light">
+                                        <el-button type="primary"
+                                                   icon="el-icon-view"
+                                                   size="mini"
+                                                   round
+                                                   disabled>
+
+                                        </el-button>
+                                    </el-tooltip>
+                                    <el-tooltip content="编辑此行" placement="top" :enterable="false" effect="light">
+                                        <el-button type="primary"
+                                                   icon="el-icon-edit"
+                                                   size="mini"
+                                                   round
+                                                   @click="editRowS(scope.row.id)">
+                                        </el-button>
+                                    </el-tooltip>
+                                    <el-tooltip content="删除此行" placement="top" :enterable="false" effect="light">
+                                        <el-button type="primary"
+                                                   icon="el-icon-delete"
+                                                   size="mini"
+                                                   round
+                                                   @click="deleteRowS(scope.row.id)">
+                                        </el-button>
+                                    </el-tooltip>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <!-- 分页 -->
+                        <el-pagination
+                          @size-change="handleSizeChange1"
+                          @current-change="handleCurrentChange1"
+                          :current-page="queryProject.page_num1"
+                          :page-sizes="[10, 25, 50, 100]"
+                          :page-size="queryProject.page_size1"
+                          layout="total, sizes, prev, pager, next, jumper"
+                          :total="total1">
+                        </el-pagination>
+                    </el-card>
+                </el-tab-pane>
+            </el-tabs>
+        </div>
     </div>
 </template>
 
@@ -257,131 +263,106 @@
         name: "interfaceCase",
         data() {
             return {
-                activeName2: 'first',
-                response: '点击测试按钮后获取内容',
-                drawer: false,
-                res_c: false,
-                res_r: false,
-                // 项目列表缓存
-                projectList: [],
-                host: null,
-                // 新增用例数据模型
-                createCaseForm: {
-                    operator: window.sessionStorage.getItem('user'),
-                    project_id: null,
-                    test_case: {
-                        case_name: null,
-                        case_desc: null
-                    },
-                    test_step: []
+                loading: false,
+                activeName: 'first',
+                // 测试项目列表
+                project_list: [],
+                // 测试集合列表
+                set_list: [],
+                // 接收按项目分类的用例数据
+                project_case_list: [],
+                // 接收按集合分类的用例数据
+                set_case_list: [],
+                // 按项目请求
+                total: 0,
+                total1: 0,
+                queryProject: {
+                    query: null,
+                    page_num: 1,
+                    page_size: 10,
                 },
-                // 表单验证
-                createCaseRules: {
-                    project_id: [{ required: true, message: '请选择项目', trigger: 'change'}],
-                    case_name: [{ required: true, message: '请输入用例名称', trigger: 'blur'},
-                        {min:1, max:255, message: '长度需要大于1或者小于250', trigger: 'blur'}]
+                querySet: {
+                    query: null,
+                    page_num1: 1,
+                    page_size1: 10,
                 },
-                loading: false
-            }
-        },
-        created() {
-            this.getCreatePage()
-              this.addItem()
-            },
-        methods: {
 
-            getSelected(val) {
-                for(let i=0;i<this.projectList.length;i++){
-                    if(this.projectList[i].id===val){
-                        this.host=this.projectList[i].host
-                        // console.log(this.host)
-                    }
-                }
+            }
             },
-            addItem () {
-                this.createCaseForm.test_step.push({
-                    step_num: null,
-                    step_name: null,
-                    step_desc: null,
-                    set_up: null,
-                    tear_down: null,
-                    method: null,
-                    url: null,
-                    variable: null,
-                    need_assert: null,
-                    assert_method: null,
-                    headers: null,
-                    params: null,
-                    form_data: null,
-                    json_data: null,
-                    exp_statue: null,
-                    exp_extract: null
-                })
-            },
-            deleteItem (item, index) {
-                this.createCaseForm.test_step.splice(index, 1)
-            },
-            async getCreatePage() {
-                const {data: res} = await this.$http.get('interface/ready_create_case/')
+        created() {
+            this.getPage()
+        },
+        methods: {
+            async getPage() {
+                this.loading = true
+                const {data: res} = await this.$http.get('interface/create_edit_page/')
                 if (res.meta.status !== 200) {
+                    this.loading = false
                     return this.$message.error(res.meta.msg)
                 }
-                this.projectList = res.data.project_list
-                // console.log(res)
+                this.project_list = res.data.project_list
+                this.set_list = res.data.set_list
+                this.loading = false
             },
-            createTestCase() {
-                this.$refs.createCaseRef.validate(async valid => {
-                    if (!valid) {
-                        return this.$message.error('缺少必填项!')
-                    }
-                    // this.loading = true
-                    const {data: res} = await this.$http.post('interface/create_case/', this.createCaseForm)
-                    if (res.meta.status !== 200) {
-                        this.loading = false
-                        return this.$message.error(res.meta.msg)
-                    }
+            async getProjectSelected() {
+                this.loading = true
+                const {data: res} = await this.$http.get('interface/query_project_case/', {params:this.queryProject})
+                if (res.meta.status !== 200) {
                     this.loading = false
-                    return this.$message.success(res.meta.msg)
-
-            })
+                    return this.$message.error(res.meta.msg)
+                }
+                this.project_case_list = res.data.project_case_list
+                this.total = res.data.total
+                this.loading = false
             },
-            testCase(index) {
-                this.$refs.createCaseRef.validate(async valid => {
-                    if (!valid) {
-                        return this.$message.error('缺少必填项!')
-                    }
-                    this.loading = true
-                    const testData = {
-                        project_id: this.createCaseForm.project_id,
-                        host: this.host,
-                        step_num: index,
-                        step_name: this.createCaseForm.test_step[index].step_name,
-                        step_desc: this.createCaseForm.test_step[index].step_desc,
-                        set_up: this.createCaseForm.test_step[index].set_up,
-                        tear_down: this.createCaseForm.test_step[index].tear_down,
-                        url: this.createCaseForm.test_step[index].url,
-                        method: this.createCaseForm.test_step[index].method,
-                        variable: this.createCaseForm.test_step[index].variable,
-                        headers: this.createCaseForm.test_step[index].headers,
-                        params: this.createCaseForm.test_step[index].params,
-                        form_data: this.createCaseForm.test_step[index].form_data,
-                        json_data: this.createCaseForm.test_step[index].json_data,
-                        need_assert: this.createCaseForm.test_step[index].need_assert,
-                        exp_statue: this.createCaseForm.test_step[index].exp_statue,
-                        exp_extract: this.createCaseForm.test_step[index].exp_extract
-                    }
-                    const {data: res} = await this.$http.post('interface/to_test_step/', testData)
-                    if (res.meta.status !== 200) {
-                        this.loading = false
-                        return this.$message.error(res.meta.msg)
-                    }
-                    this.response = res.data
-                    this.res_c = res.data.assert.code
-                    this.res_r = res.data.assert.response
+            async getSetSelected() {
+                this.loading = true
+                const {data: res} = await this.$http.get('interface/query_set_case/', {params:this.querySet})
+                if (res.meta.status !== 200) {
                     this.loading = false
+                    return this.$message.error(res.meta.msg)
+                }
+                this.project_case_list = res.data.project_case_list
+                this.total1 = res.data.total
+                this.loading = false
+            },
+            // 监听分页数改变的事件
+            handleSizeChange(newSize) {
+                //console.log(newSize)
+                this.queryInfo.page_size = newSize
+                this.getProjectSelected()
+            },
+            // 监听页码 变化的事件
+            handleCurrentChange(newPage) {
+                //console.log(newPage)
+                this.queryProject.page_num = newPage
+                this.getProjectSelected()
+            },
+            // 监听分页数改变的事件
+            handleSizeChange1(newSize) {
+                //console.log(newSize)
+                this.querySet.page_size1 = newSize
+                this.getSetSelected()
+            },
+            // 监听页码 变化的事件
+            handleCurrentChange1(newPage) {
+                //console.log(newPage)
+                this.querySet.page_num1 = newPage
+                this.getSetSelected()
+            },
 
-                })
-            }
+            editRowP() {
+
+            },
+            deleteRowP() {
+
+            },
+            editRowS() {
+
+            },
+            deleteRowS() {
+
+            },
 
         }
     }
