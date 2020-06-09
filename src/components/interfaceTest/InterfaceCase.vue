@@ -179,8 +179,8 @@
                                             </el-form-item>
                                         </el-tab-pane>
                                         <el-tab-pane label="预期响应码" name="five">
-                                            <el-form-item label="预期响应码" :prop="'test_step.' + index + 'exp_statue'">
-                                                <el-input v-model="item.exp_statue" clearable>
+                                            <el-form-item label="预期响应码" :prop="'test_step.' + index + 'exp_status'">
+                                                <el-input v-model="item.exp_status" clearable>
                                                 </el-input>
                                             </el-form-item>
                                         </el-tab-pane>
@@ -314,7 +314,7 @@
                     params: null,
                     form_data: null,
                     json_data: null,
-                    exp_statue: null,
+                    exp_status: null,
                     exp_extract: null
                 })
             },
@@ -371,7 +371,7 @@
                         form_data: this.createCaseForm.test_step[index].form_data,
                         json_data: this.createCaseForm.test_step[index].json_data,
                         need_assert: this.createCaseForm.test_step[index].need_assert,
-                        exp_statue: this.createCaseForm.test_step[index].exp_statue,
+                        exp_status: this.createCaseForm.test_step[index].exp_status,
                         exp_extract: this.createCaseForm.test_step[index].exp_extract
                     }
                     const {data: res} = await this.$http.post('interface/to_test_step/', testData)

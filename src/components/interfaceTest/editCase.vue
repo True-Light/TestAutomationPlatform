@@ -89,7 +89,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column label="断言方式" prop="assert_method" width="100"></el-table-column>
-                            <el-table-column label="预期响应码" prop="exp_statue" width="150"></el-table-column>
+                            <el-table-column label="预期响应码" prop="exp_status" width="150"></el-table-column>
                             <el-table-column label="预期响应体" prop="exp_extract" width="150"></el-table-column>
                             <el-table-column label="操作" width="200" fixed="right">
                                 <template slot-scope="scope">
@@ -209,7 +209,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column label="断言方式" prop="assert_method" width="100"></el-table-column>
-                            <el-table-column label="预期响应码" prop="exp_statue" width="150"></el-table-column>
+                            <el-table-column label="预期响应码" prop="exp_status" width="150"></el-table-column>
                             <el-table-column label="预期响应体" prop="exp_extract" width="150"></el-table-column>
                             <el-table-column label="操作" width="200" fixed="right">
                                 <template slot-scope="scope">
