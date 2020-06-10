@@ -303,7 +303,7 @@
                     }
                     this.editProjectVisible = false
                     this.$message.success('更新日报成功！')
-                    this.getProject()
+                    await this.getProject()
                 })
             },
             // 根据ID获取相关的工作日报
@@ -337,7 +337,7 @@
                     return this.$message.error(response.meta.msg)
                 }
                 this.$message.success('删除项目成功')
-                this.getProject()
+                await this.getProject()
             }
 
         }

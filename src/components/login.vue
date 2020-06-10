@@ -124,6 +124,7 @@
                     this.$message.success('登陆成功')
                     window.sessionStorage.setItem('token', res.access)
                     window.sessionStorage.setItem('user', res.username)
+                    window.sessionStorage.setItem('name', res.name)
                     await this.$router.push('/home');
                 })
             },

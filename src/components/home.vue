@@ -150,8 +150,10 @@
 
     .el-aside {
         background-color: #022053;
+        height: 100%;
         color: #333;
         display: block;
+        position: absolute;
         text-align: left;
         line-height: 200px;
         .el-menu {
@@ -161,13 +163,13 @@
 
     .el-main {
         background-color: #eceef1;
-        /*color: #333;*/
-        /*position: absolute;*/
-        /*left: 200px;*/
-        /*right: 0;*/
-        /*top: 60px;*/
-        /*bottom: 0;*/
-        /*overflow-y: scroll;*/
+        color: #333;
+        position: absolute;
+        left: 200px;
+        right: 0;
+        top: 60px;
+        bottom: 0;
+        overflow-y: scroll;
     }
 
     /*body > .el-container {*/

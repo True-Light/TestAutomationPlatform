@@ -344,6 +344,7 @@
                     // location.reload()
                     // this.$router.go(0)
                     // window.reload()
+                    this.$refs.createCaseRef.resetFields()
                     this.loading = false
                     return this.$message.success(res.meta.msg)
 

@@ -25,70 +25,96 @@
                                 <el-option v-for="item in sys_module_list" :key="item.id" :label="item.name" :value="item.id">
                                 </el-option>
                             </el-select>
-                            <el-button @click="bySystemRun()">运行任务</el-button>
-                            <el-button @click="toggleSelection()">取消选择</el-button>
+                            <el-button style="margin-left: 10px" type="primary"
+                                       icon="el-icon-video-play" @click="bySystemRun()">
+                                运行任务
+                            </el-button>
+                            <el-button type="warning" icon="el-icon-circle-close" @click="toggleSelection()">取消选择</el-button>
                         </el-row>
-                        <el-card>
-                            <el-form>
+                        <el-card style="height: 140px">
+                            <el-form :model="runBySystemForm" :rules="runBySystemFormRules" ref="runBySystemFormRef">
                                 <el-row>
-                                    <el-col :span="3">
+                                    <el-col :span="3" >
+                                        <el-form-item prop="task_name">
+                                            <el-input
+                                              placeholder="请定义任务名称"
+                                              v-model="runBySystemForm.task_name"
+                                              clearable>
+                                            </el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="3" >
+                                        <el-form-item prop="username" style="margin-left: 10px">
                                         <el-input
                                                 placeholder="请输入测试用户名"
-                                                v-model="input"
+                                                v-model="runBySystemForm.username"
                                                 clearable>
                                         </el-input>
+                                        </el-form-item>
                                     </el-col>
-                                    <el-col :span="3">
+                                    <el-col :span="3" style="margin-left: 10px">
+                                        <el-form-item prop="password">
                                         <el-input
                                                 placeholder="请输入测试密码"
-                                                v-model="input"
+                                                v-model="runBySystemForm.password"
                                                 clearable>
                                         </el-input>
-
+                                        </el-form-item>
                                     </el-col>
-                                    <el-col :span="3">
+                                    <el-col :span="3" style="margin-left: 10px">
+                                        <el-form-item prop="host">
                                         <el-input
                                                 placeholder="请输入HOST"
-                                                v-model="input"
+                                                v-model="runBySystemForm.host"
                                                 clearable>
                                         </el-input>
+                                        </el-form-item>
                                     </el-col>
+                                </el-row>
+                                <el-row>
                                     <el-col :span="3">
+                                        <el-form-item prop="start_date">
                                         <div class="block">
                                             <el-date-picker
-                                                    v-model="value1"
+                                                    v-model="runBySystemForm.start_date"
                                                     type="date"
                                                     placeholder="选择开始日期">
                                             </el-date-picker>
                                         </div>
+                                        </el-form-item>
                                     </el-col>
-                                    <el-col :span="3">
+                                    <el-col :span="3" style="margin-left: 30px">
+                                        <el-form-item prop="end_date">
                                         <div class="block">
                                             <el-date-picker
-                                                    v-model="value1"
+                                                    v-model="runBySystemForm.end_date"
                                                     type="date"
                                                     placeholder="选择结束日期">
                                             </el-date-picker>
                                         </div>
+                                        </el-form-item>
                                     </el-col>
-                                    <el-col :span="3">
+                                    <el-col :span="3" style="margin-left: 30px">
+                                        <el-form-item prop="one_day">
                                         <div class="block">
                                             <el-date-picker
-                                                    v-model="value1"
+                                                    v-model="runBySystemForm.one_day"
                                                     type="date"
                                                     placeholder="选择单日日期">
                                             </el-date-picker>
                                         </div>
+                                        </el-form-item>
                                     </el-col>
-                                    <el-col :span="3">
+                                    <el-col :span="3" style="margin-left: 30px">
+                                        <el-form-item prop="page_size">
                                         <el-input
                                                 placeholder="请输入每页返回条数"
-                                                v-model="input"
+                                                v-model="runBySystemForm.page_size"
                                                 clearable>
                                         </el-input>
+                                        </el-form-item>
                                     </el-col>
                                 </el-row>
-
                             </el-form>
                         </el-card>
                     </el-card>
@@ -96,7 +122,10 @@
                         <!-- 表单区域 -->
                         <el-table :data="system_case_list" border stripe
                                   @selection-change="handleSystemSelectionChange"
-                                  ref="multipleSystemTable" v-loading="loading">
+                                  ref="multipleSystemTable"
+                                  height="800"
+                                  row-style="height: 0px"
+                                  v-loading="loading">
                             <el-table-column type="selection" width="55"></el-table-column>
                             <el-table-column label="ID" prop="id" width="40"></el-table-column>
                             <el-table-column label="系统名称" prop="sys_name" width="200">
@@ -110,12 +139,12 @@
                             <el-table-column label="请求方式" prop="method" width="80"></el-table-column>
                             <el-table-column label="定义变量" prop="variable" width="150"></el-table-column>
                             <el-table-column label="请求头" prop="headers" width="150"></el-table-column>
-                            <el-table-column label="参数(PARAM)" prop="params" width="150"></el-table-column>
-                            <el-table-column label="请求体(FORM)" prop="form_data" width="150"></el-table-column>
+                            <el-table-column label="参数(PARAM)" prop="params"></el-table-column>
+                            <el-table-column label="请求体(FORM)" prop="form_data"></el-table-column>
                         </el-table>
                     </el-card>
                 </el-tab-pane>
-                <el-tab-pane label="按项目查看" name="second">
+                <el-tab-pane label="按项目查看" name="second" disabled>
                     <el-card>
                         <el-select v-model="queryProject.query" placeholder="请选择项目" @change="getProjectSelected">
                             <el-option v-for="item in project_list" :key="item.id" :label="item.name" :value="item.id">
@@ -235,7 +264,7 @@
                         </el-pagination>
                     </el-card>
                 </el-tab-pane>
-                <el-tab-pane label="按集合查看" name="third">
+                <el-tab-pane label="按集合查看" name="third" disabled>
                     <el-card>
                         <el-select v-model="querySet.query" placeholder="请选择项目" @change="getSetSelected">
                             <el-option v-for="item in set_list" :key="item.id" :label="item.name" :value="item.id">
@@ -382,9 +411,11 @@
                 // 接收按集合分类的用例数据
                 set_case_list: [],
                 // 按项目请求
+
                 total_sys: 0,
                 total: 0,
                 total1: 0,
+
                 querySystem: {
                     query: null,
                     page_num: 1,
@@ -395,6 +426,46 @@
                     page_num: 1,
                     page_size: 10,
                 },
+                // 按系统运行表单
+                runBySystemForm: {
+                    task_name: null,
+                    username: null,
+                    password: null,
+                    host: null,
+                    start_date: null,
+                    end_date: null,
+                    one_day: null,
+                    page_size: null
+                },
+                // 按系统运行表单验证
+                runBySystemFormRules: {
+                    task_name : [
+                        { required: true, message: '请定义任务名称', trigger: 'blur'},
+                    ],
+                    username : [
+                        { required: true, message: '请输入测试账号', trigger: 'blur'},
+                    ],
+                    password : [
+                        { required: true, message: '请输入测试密码', trigger: 'blur'},
+                    ],
+                    host : [
+                        { required: true, message: '请输入测试地址', trigger: 'blur'},
+                    ],
+                    start_date : [
+                        { required: true, message: '请选择开始日期', trigger: 'change'},
+                    ],
+                    end_date : [
+                        { required: true, message: '请选择结束日期', trigger: 'change'},
+                    ],
+                    one_day : [
+                        { required: true, message: '请选择单日日期', trigger: 'change'},
+                    ],
+                    page_size : [
+                        { required: true, message: '请输入返回条数', trigger: 'blur'},
+                    ],
+                },
+
+
                 queryProject: {
                     query: null,
                     page_num: 1,
@@ -405,7 +476,7 @@
                     page_num1: 1,
                     page_size1: 10,
                 },
-                sysSelection: []
+                sysSelection: [],
             }
         },
         created() {
@@ -423,15 +494,33 @@
             },
             handleSystemSelectionChange(val) {
                 this.sysSelection = val;
-                console.log(this.sysSelection)
+                // console.log(this.sysSelection)
             },
+            // 按系统部署任务请求数据
             bySystemRun() {
-                // const tempList = this.sysSelection
-                // const getList = tempList.map(myFunction)
-                // function myFunction(value, index, array) {
-                //     return value['id']
-                // }
-                // console.log(getList)
+                this.$refs.runBySystemFormRef.validate(async valid => {
+                    if (!valid) return
+                    const tempList = this.sysSelection
+                    const getList = tempList.map(myFunction)
+                    function myFunction(value, index, array) {
+                        return value['id']
+                    }
+                    const by_system = {
+                        system_name: this.querySystem.query,
+                        module_name: this.querySystemModule.query,
+                        api_list: getList,
+                        run_data: this.runBySystemForm,
+                        operator: window.sessionStorage.getItem('name'),
+                    }
+                    // console.log(by_system)
+                    const {data: res} = await this.$http.post('task/run_task_from_sys/', by_system)
+                    if (res.meta.status !== 202) {
+                        return this.$message.error(res.meta.msg)
+                    }
+                    this.$message.success(res.meta.msg)
+                    this.$refs.runBySystemFormRef.resetFields()
+                    await this.getPage()
+                })
             },
             async getPage() {
                 this.loading = true
