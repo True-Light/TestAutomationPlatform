@@ -124,7 +124,6 @@
                                   @selection-change="handleSystemSelectionChange"
                                   ref="multipleSystemTable"
                                   height="800"
-                                  row-style="height: 0px"
                                   v-loading="loading">
                             <el-table-column type="selection" width="55"></el-table-column>
                             <el-table-column label="ID" prop="id" width="40"></el-table-column>
@@ -500,15 +499,15 @@
             bySystemRun() {
                 this.$refs.runBySystemFormRef.validate(async valid => {
                     if (!valid) return
-                    const tempList = this.sysSelection
-                    const getList = tempList.map(myFunction)
-                    function myFunction(value, index, array) {
-                        return value['id']
-                    }
+                    // const tempList = this.sysSelection
+                    // const getList = tempList.map(myFunction)
+                    // function myFunction(value, index, array) {
+                    //     return value['id']
+                    // }
                     const by_system = {
                         system_name: this.querySystem.query,
                         module_name: this.querySystemModule.query,
-                        api_list: getList,
+                        api_list: this.sysSelection,
                         run_data: this.runBySystemForm,
                         operator: window.sessionStorage.getItem('name'),
                     }

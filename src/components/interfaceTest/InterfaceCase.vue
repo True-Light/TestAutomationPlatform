@@ -73,7 +73,7 @@
                                 </el-form-item>
                             </el-col>
                             <el-col :span="3">
-                                <el-form-item label="前置函数" style="margin-left: 10px;border: 1px solid cornflowerblue">
+                                <el-form-item label="前置函数" style="margin-left: 10px">
                                 <el-switch
                                   style="display: block; margin-left: 13px; margin-top: 8px"
                                   v-model="item.set_up"
@@ -87,7 +87,7 @@
                                 </el-form-item>
                             </el-col>
                             <el-col :span="3">
-                                <el-form-item label="后置函数" style="margin-left: 10px;border:1px solid cornflowerblue ">
+                                <el-form-item label="后置函数" style="margin-left: 10px">
                                     <el-switch
                                       style="display: block; margin-left: 13px; margin-top: 8px"
                                       v-model="item.tear_down"

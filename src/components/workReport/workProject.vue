@@ -153,7 +153,8 @@
                         <el-date-picker
                                 v-model="getEditForm.submission_time"
                                 type="date"
-                                placeholder="请选择提交时间">
+                                placeholder="请选择提交时间"
+                                value-format="yyyy-MM-dd">
                         </el-date-picker>
                     </el-form-item>
 
@@ -161,7 +162,8 @@
                         <el-date-picker
                                 v-model="getEditForm.online_time"
                                 type="date"
-                                placeholder="请选择上线时间">
+                                placeholder="请选择上线时间"
+                                value-format="yyyy-MM-dd">
                         </el-date-picker>
                     </el-form-item>
 

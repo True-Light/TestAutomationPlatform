@@ -19,7 +19,8 @@
                         <el-date-picker
                           v-model="queryForm.choice_date"
                           type="date"
-                          placeholder="可选择日期">
+                          placeholder="可选择日期"
+                          value-format="yyyy-MM-dd">
                         </el-date-picker>
                     </div>
                     </el-col>
@@ -41,7 +42,6 @@
             <el-card>
                 <!-- 表单区域 -->
                 <el-table :data="task_result_list" border stripe
-                          row-style="height: 0px"
                           v-loading="loading">
                     <el-table-column label="ID" type="index" width="40"></el-table-column>
                     <el-table-column label="任务名称" prop="task_name" width="200">
@@ -66,25 +66,25 @@
                         <template slot-scope="scope">
                             <el-tag :type="scope.row.task_stat === '创建' ? 'info' :
                                 scope.row.task_stat === '运行'? 'primary':
-                                scope.row.task_stat === '成功'? 'success':
+                                scope.row.task_stat === '完成'? 'success':
                                 scope.row.task_stat === '失败'? 'danger':'warning'"
                                     close-transition>{{scope.row.task_stat}}
                             </el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column label="任务结果" prop="result"
-                                     width="90"
-                                     :filters="[{text: '成功', value: '1' },
-                                  {text: '失败', value: '0' },]"
-                                     :filter-method="filterTag2"
-                                     filter-placement="bottom-end">
-                        <template slot-scope="scope">
-                            <el-tag :type="scope.row.result === '1' ? 'success' :
-                                scope.row.result === '0'? 'danger': 'warning'"
-                                    close-transition>{{scope.row.result}}
-                            </el-tag>
-                        </template>
-                    </el-table-column>
+<!--                    <el-table-column label="任务结果" prop="result"-->
+<!--                                     width="90"-->
+<!--                                     :filters="[{text: '成功', value: '1' },-->
+<!--                                  {text: '失败', value: '0' },]"-->
+<!--                                     :filter-method="filterTag2"-->
+<!--                                     filter-placement="bottom-end">-->
+<!--                        <template slot-scope="scope">-->
+<!--                            <el-tag :type="scope.row.result === '1' ? 'success' :-->
+<!--                                scope.row.result === '0'? 'danger': 'warning'"-->
+<!--                                    close-transition>{{scope.row.result}}-->
+<!--                            </el-tag>-->
+<!--                        </template>-->
+<!--                    </el-table-column>-->
                 </el-table>
             </el-card>
         </div>
@@ -93,7 +93,7 @@
 
 <script>
     export default {
-        name: "task_config",
+        name: "task_result",
         data() {
             return {
                 loading: false,
