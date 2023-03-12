@@ -1,0 +1,316 @@
+version: "3.9"
+
+x-common-config: &common-config
+  networks:
+    - ${AUTOMATION_PUBLIC_NETWORK?Variable not set}
+  #    - default
+  restart: unless-stopped
+  logging:
+    driver: json-file
+    options:
+      max-size: "10240k"
+      max-file: "10"
+
+services:
+
+  frontend:
+    <<: *common-config
+    image: '${DOCKER_IMAGE_WEB}:${TAG-latest}'
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - server
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./data/nginx/log:/var/log/nginx
+      - ./server/allure-reports:/www/allure-reports
+      - ./http_nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./http_nginx/conf.d/:/etc/nginx/conf.d
+      - ./http_nginx/nginxconfig.io:/etc/nginx/nginxconfig.io
+    #      - ./nginx/ssl_files:/etc/nginx/ssl_files
+    build:
+      context: ./web
+      dockerfile: web.dockerfile
+
+  #  file-server:
+  #    <<: *common-config
+  #    image: nginx:1.22
+  #    depends_on:
+  #      - server
+  #    volumes:
+  #      - /etc/timezone:/etc/timezone:ro
+  #      - /etc/localtime:/etc/localtime:ro
+  #      - ./file_nginx/conf.d:/etc/nginx/conf.d
+  #      - ./server/allure_reports:/usr/local/static
+  #    build:
+  #      context: ./web
+  #      dockerfile: web.dockerfile
+
+  #  mysql:
+  #    <<: *common-config
+  #    image: mysql:8
+  #    ports:
+  #      - "3306:3306"
+  #    volumes:
+  #      - /etc/timezone:/etc/timezone:ro
+  #      - /etc/localtime:/etc/localtime:ro
+  #      - ./data/mysql:/var/lib/mysql
+  #    env_file:
+  #      - .env
+  #    environment:
+  #      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  #      MYSQL_USER: ${MYSQL_USER}
+  #      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  #      MYSQL_DATABASE: ${MYSQL_DB}
+  #    command:
+  #      --default-authentication-plugin=mysql_native_password
+  #    healthcheck:
+  #      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD" ]
+  #      interval: 60s
+  #      timeout: 20s
+  #      retries: 5
+  #      start_period: 60s
+  #
+  #  redis:
+  #    <<: *common-config
+  #    image: redis:7
+  #    ports:
+  #      - "6379:6379"
+  #    volumes:
+  #      - /etc/timezone:/etc/timezone:ro
+  #      - /etc/localtime:/etc/localtime:ro
+  #      - ./redis/redis.conf:/etc/redis.conf
+  #      - ./data/redis:/data
+  #    env_file:
+  #      - .env
+  #    environment:
+  #      LANG: en_US.UTF-8
+  #    command:
+  #      - "requirepass '${REDIS_PASSWORD}"
+  #    healthcheck:
+  #      test: [ "CMD", "redis-cli", "ping" ]
+  #      interval: 60s
+  #      timeout: 10s
+  #      retries: 5
+  #      start_period: 60s
+  #
+  #  rabbitmq:
+  #    <<: *common-config
+  #    image: rabbitmq:3.9-management
+  #    ports:
+  #      - "15672:15672"
+  #      - "5672:5672"
+  #    volumes:
+  #      - /etc/timezone:/etc/timezone:ro
+  #      - /etc/localtime:/etc/localtime:ro
+  #      - ./data/rabbitmq:/var/lib/rabbitmq
+  #    env_file:
+  #      - .env
+  #    environment:
+  #      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+  #      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+  #
+  #  postgresql:
+  #    <<: *common-config
+  #    image: postgres:15
+  #    ports:
+  #      - "5432:5432"
+  #    volumes:
+  #      - /etc/timezone:/etc/timezone:ro
+  #      - /etc/localtime:/etc/localtime:ro
+  #      - ./data/postgres:/var/lib/postgresql/data/pgdata:rw
+  #    env_file:
+  #       - .env
+  #    environment:
+  #      PGDATA: /var/lib/postgresql/data/pgdata
+  #      POSTGRES_USER: ${POSTGRES_USER}
+  #      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #      POSTGRES_DB: ${POSTGRES_DB}
+  #    healthcheck:
+  #      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+  #      interval: 10s
+  #      retries: 5
+  #      start_period: 60s
+  #
+  #  mongo:
+  #    <<: *common-config
+  #    image: mongo:6
+  #    ports:
+  #      - "27017:27017"
+  #    volumes:
+  #      - /etc/timezone:/etc/timezone:ro
+  #      - /etc/localtime:/etc/localtime:ro
+  #      - ./mongo:/docker-entrypoint-initdb.d/
+  #      - ./data/mongo:/data/data_handle_client
+  #    env_file:
+  #      - .env
+  #    environment:
+  #      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USER}
+  #      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+  #      MONGO_INITDB_DATABASE: ${MONGODB_DB}
+  #
+  #  minio:
+  #    <<: *common-config
+  #    image: minio/minio
+  #    ports:
+  #      - "9000:9000"
+  #      - "9001:9001"
+  #    volumes:
+  #      - /etc/timezone:/etc/timezone:ro
+  #      - /etc/localtime:/etc/localtime:ro
+  #      - ./data/minio:/data
+  #    environment:
+  #      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+  #      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+  #    command: server /data --console-address ":9001"
+  #    healthcheck:
+  #      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+  #      interval: 30s
+  #      timeout: 20s
+  #      retries: 3
+
+  #  allure-server:
+  #    <<: *common-config
+  #    image: kochetkovma/allure-server:latest
+  #    env_file:
+  #      - .env
+  #    environment:
+  #      SPRING_DATASOURCE_URL: jdbc:postgresql://47.95.111.207:5432/allure
+  #      SPRING_DATASOURCE_USERNAME: postgres
+  #      SPRING_DATASOURCE_PASSWORD: gG6*cD0@uC0!aF1!fE2~bL1]hJ4@aG4
+  #      SPRING_JPA_DATABASE: postgresql
+  #      SPRING_JPA_HIBERNATE_DDL-AUTO: update # Careful! 'create' destroy data! https://stackoverflow.com/questions/21113154/spring-boot-ddl-auto-generator
+  #      spring_servlet_multipart_maxRequestSize: 1000MB
+  #      spring_servlet_multipart_maxFileSize: 1000MB
+  #      JAVA_OPTS: -Xms256m -Xmx4096m
+  #      allure.clean.time: '12:00'
+  #      allure.clean.ageDays: 30
+  #      allure.reports.history-level: 15
+  #    volumes:
+  #      - /etc/timezone:/etc/timezone:ro
+  #      - /etc/localtime:/etc/localtime:ro
+  #      - ./data/allure:/allure:rw
+
+  server:
+    <<: *common-config
+    image: '${DOCKER_IMAGE_SERVER}:${TAG-latest}'
+    #    depends_on:
+    #      - mysql
+    #      - redis
+    env_file:
+      - .env
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./server:/app
+    environment:
+      - SERVER_NAME=${DOMAIN?Variable not set}
+      - SERVER_HOST=https://${DOMAIN?Variable not set}
+      # Allow explicit env var override for tests
+      - SMTP_HOST=${SMTP_HOST?Variable not set}
+      - MAX_WORKERS=2
+      - LANG=en_US.UTF-8
+      - LOG_LEVEL=info
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://localhost/api/v1/system/healthy" ]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    build:
+      context: ./server
+      #      dockerfile: server.dockerfile
+      dockerfile: serverWithAllure.dockerfile
+    command:
+      - /start-reload.sh
+
+  #  celery-beat:
+  #    <<: *common-config
+  #    image: '${DOCKER_IMAGE_CELERYWORKER}:${TAG-latest}'
+  #    #    depends_on:
+  #    #      - redis
+  #    #      - mysql
+  #    env_file:
+  #      - .env
+  #    volumes:
+  #      - /etc/timezone:/etc/timezone:ro
+  #      - /etc/localtime:/etc/localtime:ro
+  #      - ./server:/app
+  #    environment:
+  #      - SERVER_NAME=${DOMAIN?Variable not set}
+  #      - SERVER_HOST=https://${DOMAIN?Variable not set}
+  #      # Allow explicit env var override for tests
+  #      - SMTP_HOST=${SMTP_HOST?Variable not set}
+  #    build:
+  #      context: ./server
+  #      dockerfile: celery.dockerfile
+  #    command: celery -A celery_app.app beat
+  #
+  #  worker-allure-master:
+  #    <<: *common-config
+  #    image: '${DOCKER_IMAGE_CELERYWORKER}:${TAG-latest}'
+  #    depends_on:
+  #      - celery-beat
+  #    #      - redis
+  #    #      - mysql
+  #    env_file:
+  #      - .env
+  #    volumes:
+  #      - /etc/timezone:/etc/timezone:ro
+  #      - /etc/localtime:/etc/localtime:ro
+  #      - ./server:/app
+  #    environment:
+  #      - SERVER_NAME=${DOMAIN?Variable not set}
+  #      - SERVER_HOST=https://${DOMAIN?Variable not set}
+  #      # Allow explicit env var override for tests
+  #      - SMTP_HOST=${SMTP_HOST?Variable not set}
+  #    build:
+  #      context: ./server
+  #      dockerfile: celery.dockerfile
+  #    command: celery -A celery_app.app worker -l info -c 2
+
+  #  worker-standby:
+  #    <<: *common-config
+  #    image: '${DOCKER_IMAGE_CELERYWORKER}:${TAG-latest}'
+  #    depends_on:
+  #       - worker-allure-master
+  ##      - redis
+  ##      - mysql
+  #    env_file:
+  #      - .env
+  #    volumes:
+  #      - /etc/timezone:/etc/timezone:ro
+  #      - /etc/localtime:/etc/localtime:ro
+  #      - ./server:/app
+  #    environment:
+  #      - SERVER_NAME=${DOMAIN?Variable not set}
+  #      - SERVER_HOST=https://${DOMAIN?Variable not set}
+  #      # Allow explicit env var override for tests
+  #      - SMTP_HOST=${SMTP_HOST?Variable not set}
+  #    build:
+  #      context: ./server
+  #      dockerfile: celery.dockerfile
+  #    command: celery -A celery_app.app worker -l info -Q allure -c 2
+
+#  flower:
+#    <<: *common-config
+#    image: mher/flower:master
+#    volumes:
+#      - /etc/timezone:/etc/timezone:ro
+#      - /etc/localtime:/etc/localtime:ro
+#      - ./data/flower:/data
+#    working_dir: /data
+#    env_file:
+#      - .env
+#    depends_on:
+#      - worker-allure-master
+#    #      - redis
+#    environment:
+#      - CELERY_BROKER_URL=${REDIS_URI}
+#    command:
+#      - "--broker=${REDIS_URI}"
+
+networks:
+  automation-public:
